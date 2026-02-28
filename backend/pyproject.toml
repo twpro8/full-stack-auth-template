@@ -7,7 +7,18 @@ authors = [
     { name = "twpro8", email = "twpro8@gmail.com" }
 ]
 requires-python = ">=3.14, <4"
-dependencies = []
+dependencies = [
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "fastapi[standard]>=0.134.0",
+    "greenlet>=3.3.2",
+    "pwdlib[argon2,bcrypt]>=0.3.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.13.1",
+    "pyjwt>=2.11.0",
+    "sqlalchemy[asyncio]>=2.0.47",
+    "uvicorn>=0.41.0",
+]
 
 [project.scripts]
 hydra = "hydra:main"
