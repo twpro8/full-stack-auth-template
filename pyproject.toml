@@ -2,9 +2,14 @@
 name = "hydra-auth"
 version = "0.1.0"
 requires-python = ">=3.14,<4"
-dependencies = []
+dependencies = [
+    "hydra",
+]
 
 [tool.uv.workspace]
 members = [
     "backend",
 ]
+
+[tool.uv.sources]
+hydra = { workspace = true }
