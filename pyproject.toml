@@ -17,4 +17,20 @@ hydra = { workspace = true }
 [dependency-groups]
 dev = [
     "black>=26.1.0",
+    "mypy>=1.19.1",
 ]
+
+[tool.mypy]
+strict = true
+pretty = true
+show_error_codes = true
+
+plugins = [
+    "pydantic.mypy",
+]
+
+[tool.pydantic-mypy]
+init_typed = true
+init_forbid_extra = true
+warn_untyped_fields = true
+warn_required_dynamic_aliases = true
