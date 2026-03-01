@@ -2,6 +2,8 @@ from types import TracebackType
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from hydra.repositories import UserRepository
+
 
 class UnitOfWork:
     _session: AsyncSession
@@ -10,6 +12,7 @@ class UnitOfWork:
         self._session = session
 
     async def __aenter__(self) -> UnitOfWork:
+        self.users = UserRepository(self._session)
         return self
 
     async def __aexit__(
