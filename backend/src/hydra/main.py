@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from hydra.config import settings
+from hydra.api import master_router
+
+app = FastAPI(title=settings.PROJECT_NAME)
+app.include_router(master_router, prefix=settings.API_V1_STR)
 
 
 @app.get("/hello")
