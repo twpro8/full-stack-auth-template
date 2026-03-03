@@ -1,12 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
-from hydra.api.dependencies import UserServiceDep, UserIdDep
+from hydra.api.dependencies import (
+    UserServiceDep,
+    UserDep,
+    get_current_superuser,
+)
 from hydra.schemas.user import UsersRead, UserRead, UserPublic
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("")  # TODO: superuser dependency and pagination
+@router.get(
+    "", dependencies=[Depends(get_current_superuser)]
+)  # TODO: implement pagination
 async def get_users(service: UserServiceDep) -> UsersRead:
     users, count = await service.get_all()
     return UsersRead(
@@ -16,9 +22,5 @@ async def get_users(service: UserServiceDep) -> UsersRead:
 
 
 @router.get("/me")
-async def get_me(
-    user_id: UserIdDep,
-    service: UserServiceDep,
-) -> UserPublic:
-    user = await service.get_by_id(user_id)
-    return UserPublic.model_validate(user)
+async def get_me(current_user: UserDep) -> UserPublic:
+    return UserPublic.model_validate(current_user)
