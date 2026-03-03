@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from hydra.schemas import BaseSchema
 
 
-class UserCreate(BaseModel):
+class UserCreate(BaseSchema):
     username: str
     email: str
     password_hash: str
@@ -14,4 +14,27 @@ class User(UserCreate):
     id: int
     is_active: bool
     is_superuser: bool
+    created_at: datetime
+
+
+class UserRead(BaseSchema):
+    id: int
+    username: str
+    email: str
+    full_name: str
+    is_active: bool
+    is_superuser: bool
+    created_at: datetime
+
+
+class UsersRead(BaseSchema):
+    count: int
+    data: list[UserRead]
+
+
+class UserPublic(BaseSchema):
+    id: int
+    username: str
+    email: str
+    full_name: str
     created_at: datetime
