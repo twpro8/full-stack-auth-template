@@ -1,6 +1,6 @@
 from typing import Annotated, AsyncGenerator
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,6 +8,7 @@ from hydra.config import settings
 from hydra.database import get_session
 from hydra.database.unit_of_work import UnitOfWork
 from hydra.schemas.auth import TokenPayload
+from hydra.schemas.user import User
 from hydra.security import decode_access_token
 from hydra.services import AuthService, UserService
 
@@ -46,3 +47,23 @@ async def get_current_user_id(token: TokenDep) -> int:
 
 
 UserIdDep = Annotated[int, Depends(get_current_user_id)]
+
+
+async def get_current_user(
+    user_id: UserIdDep,
+    service: UserServiceDep,
+) -> User:
+    user = await service.get_by_id(user_id)
+    return user
+
+
+UserDep = Annotated[User, Depends(get_current_user)]
+
+
+async def get_current_superuser(current_user: UserDep) -> User:
+    if not current_user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission to perform this action",
+        )
+    return current_user
