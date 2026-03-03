@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, func
 
 from hydra.models import UserOrm
 from hydra.repositories import BaseRepository
@@ -12,8 +12,8 @@ class UserRepository(BaseRepository):
         statement = insert(UserOrm).values(data.model_dump())
         await self.session.execute(statement)
 
-    async def get_all(self) -> Sequence[User]:
-        query = select(UserOrm)
+    async def get_all(self, offset: int, limit: int) -> Sequence[User]:
+        query = select(UserOrm).offset(offset).limit(limit)
         result = await self.session.execute(query)
         models = result.scalars().all()
         return [User.model_validate(model) for model in models]
@@ -35,3 +35,8 @@ class UserRepository(BaseRepository):
             return None
 
         return User.model_validate(user)
+
+    async def get_count(self) -> int:
+        query = select(func.count()).select_from(UserOrm)
+        result = await self.session.execute(query)
+        return result.scalar_one()
