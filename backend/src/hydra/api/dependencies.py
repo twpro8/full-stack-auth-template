@@ -8,6 +8,7 @@ from hydra.config import settings
 from hydra.database import get_session
 from hydra.database.unit_of_work import UnitOfWork
 from hydra.schemas.auth import TokenPayload
+from hydra.schemas.common import PaginationParams
 from hydra.schemas.user import User
 from hydra.security import decode_access_token
 from hydra.services import AuthService, UserService
@@ -16,6 +17,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login
 
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
+PaginationDep = Annotated[PaginationParams, Depends()]
 
 
 async def get_unit_of_work(session: SessionDep) -> AsyncGenerator[UnitOfWork, None]:
