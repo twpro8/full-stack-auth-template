@@ -4,7 +4,7 @@ from asyncpg.exceptions import UniqueViolationError  # type: ignore[import-untyp
 from sqlalchemy import insert, select, func
 from sqlalchemy.exc import IntegrityError
 
-from hydra.exceptions import UsernameAlreadyExistsError, EmailAlreadyExistsError
+from hydra.errors import UsernameAlreadyExistsError, EmailAlreadyExistsError
 from hydra.models import UserOrm
 from hydra.repositories import BaseRepository
 from hydra.schemas.user import UserCreate, User

@@ -7,7 +7,7 @@ from pwdlib.hashers.bcrypt import BcryptHasher
 import jwt
 
 from hydra.config import settings
-from hydra.exceptions import InvalidCredentialsError
+from hydra.errors import InvalidCredentialsError
 
 password_hasher = PasswordHash(
     (

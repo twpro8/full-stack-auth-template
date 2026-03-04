@@ -1,5 +1,5 @@
-from hydra.exceptions import UserNotFoundError
 from hydra.schemas import PaginatedResult
+from hydra.errors import UserNotFoundError
 from hydra.schemas.user import User
 from hydra.services import BaseService
 

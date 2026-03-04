@@ -1,4 +1,4 @@
-from hydra.exceptions import UserNotFoundError, InvalidPasswordError
+from hydra.errors import UserNotFoundError, InvalidPasswordError
 from hydra.schemas.user import UserCreate
 from hydra.security import hash_password, verify_password, create_access_token
 from hydra.services import BaseService
