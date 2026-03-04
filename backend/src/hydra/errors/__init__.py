@@ -8,6 +8,7 @@ __all__ = [
     "EmailAlreadyExistsError",
     "InvalidCredentialsError",
     "InvalidPasswordError",
+    "app_exception_handler",
 ]
 
 from .base import HydraError, ObjectNotFoundError, ObjectAlreadyExistsError
@@ -18,3 +19,4 @@ from .user import (
     EmailAlreadyExistsError,
 )
 from .auth import InvalidCredentialsError, InvalidPasswordError
+from .interceptors import app_exception_handler
