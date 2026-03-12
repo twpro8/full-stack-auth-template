@@ -4,7 +4,7 @@ from asyncpg.exceptions import UniqueViolationError  # type: ignore[import-untyp
 from sqlalchemy import insert, select, func
 from sqlalchemy.exc import IntegrityError
 
-from hydra.errors import UsernameAlreadyExistsError, EmailAlreadyExistsError
+from hydra.errors import UserAlreadyExistsError
 from hydra.models import UserOrm
 from hydra.repositories import BaseRepository
 from hydra.schemas.user import UserCreate, User
@@ -20,10 +20,8 @@ class UserRepository(BaseRepository):
             constraint = getattr(cause, "constraint_name", None)
             if isinstance(cause, UniqueViolationError):
                 match constraint:
-                    case "users_username_key":
-                        raise UsernameAlreadyExistsError from e
                     case "users_email_key":
-                        raise EmailAlreadyExistsError from e
+                        raise UserAlreadyExistsError from e
                     case _:
                         raise
             raise
@@ -42,8 +40,8 @@ class UserRepository(BaseRepository):
 
         return User.model_validate(user)
 
-    async def get_by_username(self, username: str) -> User | None:
-        query = select(UserOrm).filter_by(username=username)
+    async def get_by_email(self, email: str) -> User | None:
+        query = select(UserOrm).filter_by(email=email)
         result = await self.session.execute(query)
         user = result.scalar_one_or_none()
 

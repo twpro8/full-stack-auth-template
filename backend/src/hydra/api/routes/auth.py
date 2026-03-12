@@ -1,24 +1,30 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, status
+from fastapi.responses import Response
 
 from hydra.api.dependencies import AuthServiceDep
-from hydra.schemas.auth import RegisterForm, Token
+from hydra.schemas.auth import RegisterForm, LoginForm
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def authenticate(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    form_data: LoginForm,
     service: AuthServiceDep,
-) -> Token:
+    response: Response,
+) -> dict[str, str]:
     access_token = await service.login(
-        username=form_data.username,
+        email=form_data.email,
         password=form_data.password,
     )
-    return Token(access_token=access_token)
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+    )
+    return {"status": "OK"}
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
@@ -27,9 +33,8 @@ async def register(
     service: AuthServiceDep,
 ) -> dict[str, str]:
     await service.register(
-        username=form_data.username,
-        password=form_data.password,
-        email=form_data.email,
         full_name=form_data.full_name,
+        email=form_data.email,
+        password=form_data.password,
     )
     return {"status": "OK"}

@@ -1,10 +1,9 @@
 from typing import Annotated, AsyncGenerator
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import APIKeyCookie
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from hydra.config import settings
 from hydra.database import get_session
 from hydra.database.unit_of_work import UnitOfWork
 from hydra.schemas.auth import TokenPayload
@@ -13,9 +12,9 @@ from hydra.schemas.user import User
 from hydra.security import decode_access_token
 from hydra.services import AuthService, UserService
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
+cookie_scheme = APIKeyCookie(name="access_token")
 
-TokenDep = Annotated[str, Depends(oauth2_scheme)]
+TokenDep = Annotated[str, Depends(cookie_scheme)]
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 PaginationDep = Annotated[PaginationParams, Depends()]
 
