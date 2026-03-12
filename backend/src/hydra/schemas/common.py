@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from hydra.schemas import BaseSchema
 
@@ -19,3 +19,7 @@ class PaginationParams(BaseSchema):
 class PaginatedResult[T]:
     items: Sequence[T]
     count: int
+
+
+class SuccessResponse(BaseModel):
+    status: str = "OK"
