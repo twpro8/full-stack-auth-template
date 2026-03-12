@@ -12,7 +12,8 @@ from hydra.schemas.user import User
 from hydra.security import decode_access_token
 from hydra.services import AuthService, UserService
 
-cookie_scheme = APIKeyCookie(name="access_token")
+# If not access token, returns http error 401 Unauthorized
+cookie_scheme = APIKeyCookie(name="access_token", auto_error=True)
 
 TokenDep = Annotated[str, Depends(cookie_scheme)]
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
