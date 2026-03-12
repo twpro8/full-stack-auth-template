@@ -23,7 +23,6 @@ def upgrade() -> None:
     op.create_table(
         "users",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("username", sa.String(length=128), nullable=False),
         sa.Column("email", sa.String(length=128), nullable=False),
         sa.Column("password_hash", sa.String(length=128), nullable=False),
         sa.Column("full_name", sa.String(length=128), nullable=False),
@@ -37,7 +36,6 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email"),
-        sa.UniqueConstraint("username"),
     )
 
 

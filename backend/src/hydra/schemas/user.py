@@ -4,7 +4,6 @@ from hydra.schemas import BaseSchema
 
 
 class UserCreate(BaseSchema):
-    username: str
     email: str
     password_hash: str
     full_name: str
@@ -19,7 +18,6 @@ class User(UserCreate):
 
 class UserRead(BaseSchema):
     id: int
-    username: str
     email: str
     full_name: str
     is_active: bool
@@ -34,7 +32,6 @@ class UsersRead(BaseSchema):
 
 class UserPublic(BaseSchema):
     id: int
-    username: str
     email: str
     full_name: str
     created_at: datetime
