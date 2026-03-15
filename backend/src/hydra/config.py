@@ -42,8 +42,9 @@ class Settings(BaseSettings):
         )
 
     JWT_SECRET: str = secrets.token_urlsafe(128)
-    JWT_EXPIRE_MINUTES: int = 60 * 24  # 1 day
+    JWT_EXPIRE_MINUTES: int = 30
     JWT_ALGORITHM: str
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 1 day
 
     CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = []
 
