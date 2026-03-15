@@ -12,12 +12,36 @@ from hydra.schemas.user import User
 from hydra.security import decode_access_token
 from hydra.services import AuthService, UserService
 
-# If not access token, returns http error 401 Unauthorized
-cookie_scheme = APIKeyCookie(name="access_token", auto_error=True)
-
-TokenDep = Annotated[str, Depends(cookie_scheme)]
+access_cookie_scheme = APIKeyCookie(name="access_token", auto_error=False)
+refresh_cookie_scheme = APIKeyCookie(name="refresh_token", auto_error=True)
+RefreshTokenDep = Annotated[str, Depends(refresh_cookie_scheme)]
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 PaginationDep = Annotated[PaginationParams, Depends()]
+
+
+def get_access_token_cookie(
+    token: Annotated[str | None, Depends(access_cookie_scheme)],
+) -> str:
+    if token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "APIKey"},
+        )
+    return token
+
+
+AccessTokenDep = Annotated[str, Depends(get_access_token_cookie)]
+
+
+def require_not_authenticated(
+    token: Annotated[str | None, Depends(access_cookie_scheme)],
+) -> None:
+    if token is not None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Already authenticated",
+        )
 
 
 async def get_unit_of_work(session: SessionDep) -> AsyncGenerator[UnitOfWork, None]:
@@ -42,7 +66,7 @@ def get_user_service(unit_of_work: UnitOfWorkDep) -> UserService:
 UserServiceDep = Annotated[UserService, Depends(get_user_service)]
 
 
-async def get_current_user_id(token: TokenDep) -> int:
+async def get_current_user_id(token: AccessTokenDep) -> int:
     payload = decode_access_token(token)
     token_data = TokenPayload(**payload)
     return token_data.sub
