@@ -9,6 +9,7 @@ from hydra.errors import (
     InvalidCredentialsError,
     InvalidPasswordError,
 )
+from hydra.errors.auth import InvalidRefreshTokenError, RefreshTokenRevokedError
 
 _DEFAULT = (status.HTTP_500_INTERNAL_SERVER_ERROR, "Unexpected error.")
 errors: dict[type[HydraError], tuple[int, str]] = {
@@ -28,6 +29,14 @@ errors: dict[type[HydraError], tuple[int, str]] = {
     UserAlreadyExistsError: (
         status.HTTP_409_CONFLICT,
         "User already exists",
+    ),
+    InvalidRefreshTokenError: (
+        status.HTTP_401_UNAUTHORIZED,
+        "Invalid refresh token",
+    ),
+    RefreshTokenRevokedError: (
+        status.HTTP_401_UNAUTHORIZED,
+        "Refresh token has been revoked",
     ),
 }
 
