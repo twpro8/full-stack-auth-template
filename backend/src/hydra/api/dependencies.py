@@ -13,8 +13,7 @@ from hydra.security import decode_access_token
 from hydra.services import AuthService, UserService
 
 access_cookie_scheme = APIKeyCookie(name="access_token", auto_error=False)
-refresh_cookie_scheme = APIKeyCookie(name="refresh_token", auto_error=True)
-RefreshTokenDep = Annotated[str, Depends(refresh_cookie_scheme)]
+refresh_cookie_scheme = APIKeyCookie(name="refresh_token", auto_error=False)
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 PaginationDep = Annotated[PaginationParams, Depends()]
 
@@ -32,6 +31,20 @@ def get_access_token_cookie(
 
 
 AccessTokenDep = Annotated[str, Depends(get_access_token_cookie)]
+RefreshTokenOptionalDep = Annotated[str | None, Depends(refresh_cookie_scheme)]
+
+
+def get_refresh_token_cookie(token: RefreshTokenOptionalDep) -> str:
+    if token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "APIKey"},
+        )
+    return token
+
+
+RefreshTokenDep = Annotated[str, Depends(get_refresh_token_cookie)]
 
 
 def require_not_authenticated(
