@@ -1,3 +1,5 @@
+import hashlib
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -51,3 +53,13 @@ def decode_access_token(access_token: str) -> dict[str, Any]:
     except jwt.InvalidTokenError as e:
         raise InvalidCredentialsError from e
     return payload
+
+
+def create_refresh_token() -> tuple[str, str]:
+    token = secrets.token_urlsafe(48)
+    token_hash = hash_refresh_token(token)
+    return token, token_hash
+
+
+def hash_refresh_token(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
