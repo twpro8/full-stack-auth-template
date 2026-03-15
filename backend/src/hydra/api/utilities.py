@@ -20,7 +20,7 @@ def set_token_cookies(
         value=access_token,
         httponly=True,
         secure=True,
-        samesite="strict",
+        samesite="lax",
         max_age=settings.JWT_EXPIRE_MINUTES * 60,
         path="/",
     )
@@ -29,7 +29,7 @@ def set_token_cookies(
         value=refresh_token,
         httponly=True,
         secure=True,
-        samesite="strict",
+        samesite="lax",
         max_age=settings.REFRESH_TOKEN_EXPIRE_MINUTES * 60,
         path=f"{settings.API_V1_STR}/auth",
     )
@@ -45,13 +45,13 @@ def delete_token_cookies(response: Response) -> None:
         key="access_token",
         httponly=True,
         secure=True,
-        samesite="strict",
+        samesite="lax",
         path="/",
     )
     response.delete_cookie(
         key="refresh_token",
         httponly=True,
         secure=True,
-        samesite="strict",
+        samesite="lax",
         path=f"{settings.API_V1_STR}/auth",
     )

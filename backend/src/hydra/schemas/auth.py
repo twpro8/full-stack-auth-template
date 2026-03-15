@@ -1,6 +1,9 @@
+from dataclasses import dataclass
+
 from pydantic import ConfigDict, EmailStr, Field
 
 from hydra.schemas import BaseSchema
+from hydra.schemas.user import User
 
 
 class LoginForm(BaseSchema):
@@ -22,3 +25,14 @@ class Token(BaseSchema):
 
 class TokenPayload(BaseSchema):
     sub: int
+
+
+@dataclass
+class TokenPair:
+    access_token: str
+    refresh_token: str
+
+
+@dataclass
+class AuthResult(TokenPair):
+    user: User
