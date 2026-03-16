@@ -4,7 +4,7 @@ default_language_version:
 repos:
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -12,20 +12,44 @@ repos:
       - id: check-toml
       - id: check-added-large-files
 
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.1.0
+  # BACKEND
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.0
     hooks:
-      - id: black
+      - id: ruff
+        files: ^backend/
+        args: [--fix]
+
+      - id: ruff-format
+        files: ^backend/
 
   - repo: local
     hooks:
       - id: mypy
         name: mypy
-        entry: mypy
+        entry: uv run mypy backend
         language: system
-        types: [
-          python,
-        ]
-        args: [
-          --config-file, pyproject.toml,
-        ]
+        pass_filenames: false
+        files: ^backend/
+
+      # FRONTEND
+
+      - id: prettier
+        name: prettier
+        entry: bash -c 'cd frontend && npx prettier --write "${@#frontend/}"' --
+        language: system
+        files: ^frontend/.*\.(ts|tsx|css|json)$
+
+      - id: eslint
+        name: eslint
+        entry: bash -c 'cd frontend && npx eslint --fix "${@#frontend/}"' --
+        language: system
+        files: ^frontend/.*\.(ts|tsx)$
+
+      - id: tsc
+        name: typescript check
+        entry: bash -c 'cd frontend && npx tsc --noEmit'
+        language: system
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
