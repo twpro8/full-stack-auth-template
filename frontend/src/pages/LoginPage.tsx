@@ -1,6 +1,7 @@
-import type { LoginRequest } from "@/schemas/auth.ts"
-import { LoginForm } from "@/components/login-form.tsx"
 import { useState } from "react"
+
+import type { LoginRequest } from "@/schemas/auth"
+import { LoginForm } from "@/components/login-form"
 
 const LoginPage = () => {
   const [error, setError] = useState<string | null>(null)
@@ -26,4 +27,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export { LoginPage }
