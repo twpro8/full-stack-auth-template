@@ -6,6 +6,7 @@ import { PublicLayout } from "@/layouts/PublicLayout"
 import { ProtectedLayout } from "@/layouts/ProtectedLayout"
 import { HomePage } from "@/pages/HomePage"
 import { LoginPage } from "@/pages/LoginPage"
+import { SignupPage } from "@/pages/SignupPage.tsx"
 
 export const router = createBrowserRouter([
   {
@@ -29,8 +30,7 @@ export const router = createBrowserRouter([
           },
           {
             path: ROUTES.SIGNUP,
-            // TODO: SignupPage
-            element: <div>Signup Page</div>,
+            element: <SignupPage />,
           },
         ],
       },

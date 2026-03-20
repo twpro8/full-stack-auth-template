@@ -26,6 +26,7 @@ const signupFormSchema = signupSchema
 
 type LoginRequest = z.infer<typeof loginFormSchema>
 type SignupRequest = z.infer<typeof signupSchema>
+type SignupFormData = z.infer<typeof signupFormSchema>
 
 export { loginFormSchema, signupFormSchema, signupSchema }
-export type { LoginRequest, SignupRequest }
+export type { LoginRequest, SignupRequest, SignupFormData }
