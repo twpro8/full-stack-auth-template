@@ -18,13 +18,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
-  type SignupRequest,
-  signupFormSchema,
   type SignupFormData,
+  signupFormSchema,
+  type SignupRequest,
 } from "@/schemas/auth"
+import { Link } from "@tanstack/react-router"
+import { ROUTES } from "@/app/routes"
 
 interface SignupFormProps extends React.ComponentProps<typeof Card> {
-  submit: (data: SignupRequest) => Promise<void>
+  submit: (data: SignupRequest) => void
   loading: boolean
   error: string | null
 }
@@ -45,9 +47,9 @@ export function SignupForm({
     },
   })
 
-  const onSubmit = async (data: SignupFormData): Promise<void> => {
+  const onSubmit = (data: SignupFormData) => {
     const { confirmPassword: _confirmPassword, ...payload } = data
-    await submit(payload)
+    submit(payload)
   }
 
   return (
@@ -155,7 +157,7 @@ export function SignupForm({
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
               <FieldDescription className="px-6 text-center">
-                Already have an account? <a href="#">Sign in</a>
+                Already have an account? <Link to={ROUTES.LOGIN}>Sign in</Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

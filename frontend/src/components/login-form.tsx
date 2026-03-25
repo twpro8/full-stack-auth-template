@@ -18,9 +18,11 @@ import { Input } from "@/components/ui/input"
 import { loginFormSchema, type LoginRequest } from "@/schemas/auth.ts"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ROUTES } from "@/app/routes"
+import { Link } from "@tanstack/react-router"
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
-  submit: (data: LoginRequest) => Promise<void>
+  submit: (data: LoginRequest) => void
   loading: boolean
   error: string | null
 }
@@ -107,7 +109,8 @@ export function LoginForm({
                   {loading ? "Logging in..." : "Login"}
                 </Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account?{" "}
+                  <Link to={ROUTES.SIGNUP}>Sign up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
