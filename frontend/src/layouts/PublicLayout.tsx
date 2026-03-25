@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from "@tanstack/react-router"
 
 const PublicLayout = () => {
   // TODO: check if the user is logged in
